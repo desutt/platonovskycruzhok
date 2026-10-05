@@ -40,7 +40,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Название инсталляции — компактное, не обрывается */
     .installation-title {
       font-size: 0.95rem;
       line-height: 1.4;
@@ -140,57 +139,56 @@
       outline: none;
     }
 
+    /* Блок текста: кликабельный, абзацы проявляются постепенно */
     .text-block {
       max-width: 600px;
       text-align: left;
       margin-top: 24px;
       font-size: 0.9rem;
       line-height: 1.7;
-      opacity: 0.9;
+      cursor: pointer;
+      user-select: none;
+      width: 100%;
     }
 
     .text-block p {
       margin-bottom: 16px;
-      animation: slideUp 0.6s ease both;
+      opacity: 0.15;
+      transition: opacity 0.8s ease;
     }
 
-    .text-block p.hidden {
-      display: none;
+    .text-block p.visible {
+      opacity: 0.9;
     }
 
-    .next-btn {
-      background: #fff;
-      color: #000;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      margin-top: 16px;
-      transition: transform 0.2s;
-      font-weight: 500;
-    }
-
-    .next-btn:hover {
-      transform: scale(1.05);
-    }
-
-    .next-btn.hidden {
-      display: none;
-    }
-
+    /* Кнопка "Назад" — всегда видна */
     .back-btn {
       background: transparent;
       color: #888;
-      border: none;
+      border: 1px solid #333;
+      padding: 10px 24px;
+      border-radius: 50px;
       font-size: 0.85rem;
       cursor: pointer;
-      margin-top: 24px;
-      text-decoration: underline;
+      margin-top: 32px;
+      transition: color 0.2s, border-color 0.2s;
     }
 
     .back-btn:hover {
       color: #fff;
+      border-color: #666;
+    }
+
+    /* Подсказка "коснитесь экрана" */
+    .hint {
+      font-size: 0.8rem;
+      opacity: 0.4;
+      margin-top: 16px;
+      transition: opacity 0.5s ease;
+    }
+
+    .hint.hidden {
+      opacity: 0;
     }
   </style>
 </head>
@@ -210,13 +208,14 @@
     <p>Сейчас вы находитесь в сознании подростка, который сидит на лавочке в Беляево и погружается в поток, внешне длящийся несколько секунд обработки информации, но внутри вмещающий целую Вселенную.</p>
     <p style="margin-top: 24px; opacity: 0.7;">Выберите, чьими ушами вы будете слушать:</p>
     <div class="choices">
-      <div class="choice" onclick="startTrack('track1.mp3')">
-        <div class="icon">🎧</div>
-        <div class="name">Андрей</div>
-      </div>
+      <!-- Вася — первым -->
       <div class="choice" onclick="startTrack('track2.mp3')">
         <div class="icon">🎧</div>
         <div class="name">Вася</div>
+      </div>
+      <div class="choice" onclick="startTrack('track1.mp3')">
+        <div class="icon">🎧</div>
+        <div class="name">Андрей</div>
       </div>
     </div>
   </div>
@@ -224,7 +223,7 @@
   <!-- Экран 3: Плеер + текст по абзацам -->
   <div class="screen" id="screen3">
     <div class="installation-title">Детская площадка<br>как платоновский кружок</div>
-    <h2 id="player-title">🎧 Андрей</h2>
+    <h2 id="player-title">🎧 Вася</h2>
     <div class="player-wrap">
       <audio id="audio-player" controls preload="metadata">
         <source id="audio-source" src="" type="audio/mpeg">
@@ -232,14 +231,15 @@
       </audio>
     </div>
     
-    <div class="text-block" id="text-block">
-      <p class="hidden" id="para1">Каждый герой слышит своё, а реплики в диалоге запускают в голове шизопоток из голосов знакомых, деятелей, живших в Беляево, шума района, психологизмов и культурно-исторических артефактов.</p>
-      <p class="hidden" id="para2">Так рождаются призраки — места, которые есть в голове, но отсутствуют в реальности. Они имеют лишь психологическую наполненность, но всё равно являются точками ассоциативного аудиального маршрута по району и обладают материальностью.</p>
-      <p class="hidden" id="para3">Герои не смогли выбрать место из-за субъективности чувств, что нанесло им травму. Места останутся такими же призрачными, потому что культурных пространств, имеющих глобальное значение для подростков, в районе толком нет.</p>
+    <div class="text-block" id="text-block" onclick="revealNext()">
+      <p id="para1">Каждый герой слышит своё, а реплики в диалоге запускают в голове шизопоток из голосов знакомых, деятелей, живших в Беляево, шума района, психологизмов и культурно-исторических артефактов.</p>
+      <p id="para2">Так рождаются призраки — места, которые есть в голове, но отсутствуют в реальности. Они имеют лишь психологическую наполненность, но всё равно являются точками ассоциативного аудиального маршрута по району и обладают материальностью.</p>
+      <p id="para3">Герои не смогли выбрать место из-за субъективности чувств, что нанесло им травму. Места останутся такими же призрачными, потому что культурных пространств, имеющих глобальное значение для подростков, в районе толком нет.</p>
     </div>
-    
-    <button class="next-btn" id="next-btn" onclick="showNextParagraph()">Дальше →</button>
-    <button class="back-btn" onclick="goBack()">← Вернуться к выбору</button>
+
+    <div class="hint" id="hint">коснитесь текста, чтобы продолжить</div>
+
+    <button class="back-btn" onclick="goBack()">← Выбрать другого героя</button>
   </div>
 
   <script>
@@ -253,13 +253,17 @@
     }
 
     function startTrack(file) {
+      // Сброс абзацев
       currentPara = 0;
       for (let i = 1; i <= totalParas; i++) {
-        document.getElementById('para' + i).classList.add('hidden');
+        document.getElementById('para' + i).classList.remove('visible');
       }
-      document.getElementById('next-btn').classList.remove('hidden');
-      document.getElementById('next-btn').textContent = 'Дальше →';
+      
+      // Показать подсказку
+      const hint = document.getElementById('hint');
+      hint.classList.remove('hidden');
 
+      // Настройка плеера
       const audio = document.getElementById('audio-player');
       const source = document.getElementById('audio-source');
       const title = document.getElementById('player-title');
@@ -276,13 +280,13 @@
       }, 300);
     }
 
-    function showNextParagraph() {
+    function revealNext() {
       if (currentPara < totalParas) {
         currentPara++;
-        document.getElementById('para' + currentPara).classList.remove('hidden');
+        document.getElementById('para' + currentPara).classList.add('visible');
         
         if (currentPara >= totalParas) {
-          document.getElementById('next-btn').classList.add('hidden');
+          document.getElementById('hint').classList.add('hidden');
         }
       }
     }
