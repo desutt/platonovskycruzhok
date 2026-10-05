@@ -35,8 +35,25 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Название инсталляции — компактное, не обрывается */
+    .installation-title {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+      opacity: 0.6;
+      margin-bottom: 24px;
+      max-width: 400px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       line-height: 1.4;
       max-width: 600px;
       margin-bottom: 32px;
@@ -44,7 +61,7 @@
     }
 
     h2 {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       line-height: 1.5;
       max-width: 600px;
       margin-bottom: 24px;
@@ -52,7 +69,7 @@
     }
 
     p {
-      font-size: 1rem;
+      font-size: 0.95rem;
       line-height: 1.6;
       max-width: 600px;
       margin-bottom: 16px;
@@ -115,7 +132,7 @@
     .player-wrap {
       width: 100%;
       max-width: 500px;
-      margin: 24px 0;
+      margin: 16px 0;
     }
 
     audio {
@@ -126,21 +143,47 @@
     .text-block {
       max-width: 600px;
       text-align: left;
-      margin-top: 32px;
-      font-size: 0.95rem;
+      margin-top: 24px;
+      font-size: 0.9rem;
       line-height: 1.7;
       opacity: 0.9;
     }
 
     .text-block p {
       margin-bottom: 16px;
+      animation: slideUp 0.6s ease both;
+    }
+
+    .text-block p.hidden {
+      display: none;
+    }
+
+    .next-btn {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: transform 0.2s;
+      font-weight: 500;
+    }
+
+    .next-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .next-btn.hidden {
+      display: none;
     }
 
     .back-btn {
       background: transparent;
       color: #888;
       border: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       margin-top: 24px;
       text-decoration: underline;
@@ -149,39 +192,38 @@
     .back-btn:hover {
       color: #fff;
     }
-
-    .fade-in-delayed {
-      animation: fadeIn 1s ease 0.5s both;
-    }
   </style>
 </head>
 <body>
 
   <!-- Экран 1: Приветствие -->
   <div class="screen active" id="screen1">
-    <h1>Вы перешли по QR. Не беспокойтесь, это не очередная реклама, а саунд-инсталляция «Детская площадка как платоновский кружок».</h1>
+    <div class="installation-title">Детская площадка<br>как платоновский кружок</div>
+    <h1>Вы перешли по QR. Не беспокойтесь, это не очередная реклама, а саунд-инсталляция.</h1>
     <button class="btn" onclick="showScreen('screen2')">Вперёд →</button>
   </div>
 
-  <!-- Экран 2: Инструкция -->
+  <!-- Экран 2: Инструкция + выбор -->
   <div class="screen" id="screen2">
+    <div class="installation-title">Детская площадка<br>как платоновский кружок</div>
     <h2>Наденьте наушники и нажмите Play.</h2>
     <p>Сейчас вы находитесь в сознании подростка, который сидит на лавочке в Беляево и погружается в поток, внешне длящийся несколько секунд обработки информации, но внутри вмещающий целую Вселенную.</p>
     <p style="margin-top: 24px; opacity: 0.7;">Выберите, чьими ушами вы будете слушать:</p>
     <div class="choices">
-      <div class="choice" onclick="startTrack('track1.mp3', 'screen1')">
+      <div class="choice" onclick="startTrack('track1.mp3')">
         <div class="icon">🎧</div>
         <div class="name">Андрей</div>
       </div>
-      <div class="choice" onclick="startTrack('track2.mp3', 'screen2')">
+      <div class="choice" onclick="startTrack('track2.mp3')">
         <div class="icon">🎧</div>
         <div class="name">Вася</div>
       </div>
     </div>
   </div>
 
-  <!-- Экран 3: Плеер + текст -->
+  <!-- Экран 3: Плеер + текст по абзацам -->
   <div class="screen" id="screen3">
+    <div class="installation-title">Детская площадка<br>как платоновский кружок</div>
     <h2 id="player-title">🎧 Андрей</h2>
     <div class="player-wrap">
       <audio id="audio-player" controls preload="metadata">
@@ -189,16 +231,20 @@
         Ваш браузер не поддерживает аудио.
       </audio>
     </div>
-    <div class="text-block fade-in-delayed">
-      <p>Каждый герой слышит своё, а реплики в диалоге запускают в голове шизопоток из голосов знакомых, деятелей, живших в Беляево, шума района, психологизмов и культурно-исторических артефактов.</p>
-      <p>Так рождаются призраки — места, которые есть в голове, но отсутствуют в реальности. Они имеют лишь психологическую наполненность, но всё равно являются точками ассоциативного аудиального маршрута по району и обладают материальностью.</p>
-      <p>Герои не смогли выбрать место из-за субъективности чувств, что нанесло им травму. Места останутся такими же призрачными, потому что культурных пространств, имеющих глобальное значение для подростков, в районе толком нет.</p>
+    
+    <div class="text-block" id="text-block">
+      <p class="hidden" id="para1">Каждый герой слышит своё, а реплики в диалоге запускают в голове шизопоток из голосов знакомых, деятелей, живших в Беляево, шума района, психологизмов и культурно-исторических артефактов.</p>
+      <p class="hidden" id="para2">Так рождаются призраки — места, которые есть в голове, но отсутствуют в реальности. Они имеют лишь психологическую наполненность, но всё равно являются точками ассоциативного аудиального маршрута по району и обладают материальностью.</p>
+      <p class="hidden" id="para3">Герои не смогли выбрать место из-за субъективности чувств, что нанесло им травму. Места останутся такими же призрачными, потому что культурных пространств, имеющих глобальное значение для подростков, в районе толком нет.</p>
     </div>
+    
+    <button class="next-btn" id="next-btn" onclick="showNextParagraph()">Дальше →</button>
     <button class="back-btn" onclick="goBack()">← Вернуться к выбору</button>
   </div>
 
   <script>
-    let currentAudioFile = '';
+    let currentPara = 0;
+    const totalParas = 3;
 
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -206,9 +252,14 @@
       window.scrollTo(0, 0);
     }
 
-    function startTrack(file, name) {
-      currentAudioFile = file;
-      
+    function startTrack(file) {
+      currentPara = 0;
+      for (let i = 1; i <= totalParas; i++) {
+        document.getElementById('para' + i).classList.add('hidden');
+      }
+      document.getElementById('next-btn').classList.remove('hidden');
+      document.getElementById('next-btn').textContent = 'Дальше →';
+
       const audio = document.getElementById('audio-player');
       const source = document.getElementById('audio-source');
       const title = document.getElementById('player-title');
@@ -216,20 +267,24 @@
       source.src = file;
       audio.load();
       
-      if (file === 'track1.mp3') {
-        title.textContent = '🎧 Андрей';
-      } else {
-        title.textContent = '🎧 Вася';
-      }
+      title.textContent = file === 'track1.mp3' ? '🎧 Андрей' : '🎧 Вася';
       
       showScreen('screen3');
       
-      // Автовоспроизведение (может быть заблокировано браузером)
       setTimeout(() => {
-        audio.play().catch(e => {
-          console.log('Автовоспроизведение заблокировано. Нажмите Play вручную.');
-        });
+        audio.play().catch(e => console.log('Play вручную'));
       }, 300);
+    }
+
+    function showNextParagraph() {
+      if (currentPara < totalParas) {
+        currentPara++;
+        document.getElementById('para' + currentPara).classList.remove('hidden');
+        
+        if (currentPara >= totalParas) {
+          document.getElementById('next-btn').classList.add('hidden');
+        }
+      }
     }
 
     function goBack() {
