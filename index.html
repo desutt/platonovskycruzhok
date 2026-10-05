@@ -35,9 +35,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Та самая анимация — плавное появление с прозрачностью */
+    .fade-in-delayed {
+      animation: fadeIn 1s ease 0.5s both;
     }
 
     .installation-title {
@@ -156,10 +156,9 @@
 
     .text-block p.visible {
       display: block;
-      animation: slideUp 0.7s ease both;
+      animation: fadeIn 1s ease both;
     }
 
-    /* Кнопка "Читать" со стрелкой вниз */
     .read-btn {
       background: #1f1f1f;
       color: #fff;
