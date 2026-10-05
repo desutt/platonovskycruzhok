@@ -139,29 +139,63 @@
       outline: none;
     }
 
-    /* Блок текста: кликабельный, абзацы проявляются постепенно */
     .text-block {
       max-width: 600px;
       text-align: left;
       margin-top: 24px;
       font-size: 0.9rem;
       line-height: 1.7;
-      cursor: pointer;
-      user-select: none;
       width: 100%;
     }
 
+    /* Абзацы скрыты, появляются с анимацией */
     .text-block p {
       margin-bottom: 16px;
-      opacity: 0.15;
-      transition: opacity 0.8s ease;
+      display: none;
     }
 
     .text-block p.visible {
-      opacity: 0.9;
+      display: block;
+      animation: slideUp 0.7s ease both;
     }
 
-    /* Кнопка "Назад" — всегда видна */
+    /* Кнопка "Читать" со стрелкой вниз */
+    .read-btn {
+      background: #1f1f1f;
+      color: #fff;
+      border: 1px solid #333;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 400;
+    }
+
+    .read-btn:hover {
+      background: #262626;
+      border-color: #666;
+      transform: translateY(-2px);
+    }
+
+    .read-btn.hidden {
+      display: none;
+    }
+
+    .read-btn .arrow {
+      display: inline-block;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
     .back-btn {
       background: transparent;
       color: #888;
@@ -170,25 +204,13 @@
       border-radius: 50px;
       font-size: 0.85rem;
       cursor: pointer;
-      margin-top: 32px;
+      margin-top: 24px;
       transition: color 0.2s, border-color 0.2s;
     }
 
     .back-btn:hover {
       color: #fff;
       border-color: #666;
-    }
-
-    /* Подсказка "коснитесь экрана" */
-    .hint {
-      font-size: 0.8rem;
-      opacity: 0.4;
-      margin-top: 16px;
-      transition: opacity 0.5s ease;
-    }
-
-    .hint.hidden {
-      opacity: 0;
     }
   </style>
 </head>
@@ -208,7 +230,6 @@
     <p>Сейчас вы находитесь в сознании подростка, который сидит на лавочке в Беляево и погружается в поток, внешне длящийся несколько секунд обработки информации, но внутри вмещающий целую Вселенную.</p>
     <p style="margin-top: 24px; opacity: 0.7;">Выберите, чьими ушами вы будете слушать:</p>
     <div class="choices">
-      <!-- Вася — первым -->
       <div class="choice" onclick="startTrack('track2.mp3')">
         <div class="icon">🎧</div>
         <div class="name">Вася</div>
@@ -231,14 +252,15 @@
       </audio>
     </div>
     
-    <div class="text-block" id="text-block" onclick="revealNext()">
+    <div class="text-block" id="text-block">
       <p id="para1">Каждый герой слышит своё, а реплики в диалоге запускают в голове шизопоток из голосов знакомых, деятелей, живших в Беляево, шума района, психологизмов и культурно-исторических артефактов.</p>
       <p id="para2">Так рождаются призраки — места, которые есть в голове, но отсутствуют в реальности. Они имеют лишь психологическую наполненность, но всё равно являются точками ассоциативного аудиального маршрута по району и обладают материальностью.</p>
       <p id="para3">Герои не смогли выбрать место из-за субъективности чувств, что нанесло им травму. Места останутся такими же призрачными, потому что культурных пространств, имеющих глобальное значение для подростков, в районе толком нет.</p>
     </div>
 
-    <div class="hint" id="hint">коснитесь текста, чтобы продолжить</div>
-
+    <button class="read-btn" id="read-btn" onclick="revealNext()">
+      Читать <span class="arrow">↓</span>
+    </button>
     <button class="back-btn" onclick="goBack()">← Выбрать другого героя</button>
   </div>
 
@@ -259,9 +281,8 @@
         document.getElementById('para' + i).classList.remove('visible');
       }
       
-      // Показать подсказку
-      const hint = document.getElementById('hint');
-      hint.classList.remove('hidden');
+      // Показать кнопку "Читать"
+      document.getElementById('read-btn').classList.remove('hidden');
 
       // Настройка плеера
       const audio = document.getElementById('audio-player');
@@ -285,8 +306,9 @@
         currentPara++;
         document.getElementById('para' + currentPara).classList.add('visible');
         
+        // Если все абзацы показаны — скрыть кнопку
         if (currentPara >= totalParas) {
-          document.getElementById('hint').classList.add('hidden');
+          document.getElementById('read-btn').classList.add('hidden');
         }
       }
     }
